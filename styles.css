@@ -327,12 +327,12 @@ section { padding: 96px 0; }
   justify-content: center;
   align-items: center;
   width: 100%;
-  max-width: 68rem;
-  height: clamp(19rem, 30vw, 27rem);
+  max-width: 60rem;
+  height: clamp(20rem, 30vw, 28rem);
 }
 
 .fan-card {
-  --fan-card-w: clamp(9rem, 15vw, 12.5rem);
+  --fan-card-w: clamp(10.5rem, 18vw, 14.5rem);
   position: absolute;
   left: 50%;
   top: 50%;
@@ -342,8 +342,13 @@ section { padding: 96px 0; }
   background: var(--white);
   border-radius: var(--radius-md);
   overflow: hidden;
-  box-shadow: 0 16px 34px rgba(43, 36, 23, .2);
+  box-shadow: 0 20px 34px rgba(167, 137, 4, .35);
   cursor: default;
+  transition: box-shadow .35s ease;
+}
+
+.fan-card:hover {
+  box-shadow: 0 30px 48px rgba(167, 137, 4, .55);
 }
 
 .fan-card-img { aspect-ratio: 3/4; overflow: hidden; pointer-events: none; }
@@ -363,7 +368,7 @@ section { padding: 96px 0; }
 }
 
 @media (max-width: 640px) {
-  .fan-layout { height: clamp(13rem, 58vw, 18rem); }
+  .fan-layout { height: clamp(14rem, 60vw, 19rem); }
   .fan-card-body { padding: 10px 12px 12px; }
   .fan-card-body p { -webkit-line-clamp: 2; }
 }

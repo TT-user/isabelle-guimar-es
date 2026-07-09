@@ -69,16 +69,17 @@ document.querySelectorAll('.faq-item').forEach((item) => {
 
   // Distributes cards evenly around the center slot (fan math ported from
   // the reference card-fan-carousel component, simplified for a fixed,
-  // non-paginated set of cards).
+  // non-paginated set of cards). Kept close together and mostly level
+  // (small y/rotation spread) rather than a wide, dramatic arc.
   function getSlotConfig(total, slot) {
     const center = (total - 1) / 2;
     const distance = center > 0 ? (slot - center) / center : 0;
     const absDistance = Math.abs(distance);
     return {
-      rot: distance * 21,
-      scale: 1 - 0.2244 * absDistance * absDistance,
-      x: distance * 30,
-      y: absDistance * absDistance * 7.3,
+      rot: distance * 11,
+      scale: 1 - 0.13 * absDistance * absDistance,
+      x: distance * 17,
+      y: absDistance * absDistance * 2,
       zIndex: 10 - Math.round(absDistance * 4),
     };
   }
@@ -101,10 +102,10 @@ document.querySelectorAll('.faq-item').forEach((item) => {
         const dist = Math.abs(i - hovered);
         delay = dist * 0.02;
         if (i === hovered) {
-          y -= 1.6;
-          scale *= 1.08;
+          y -= 2.6;
+          scale *= 1.22;
         } else {
-          const push = 4.5 * (1 + 0.2 * Math.max(0, 3 - dist));
+          const push = 4 * (1 + 0.2 * Math.max(0, 3 - dist));
           if (i < hovered) { x -= push * m; rot -= 3 / (dist + 1); }
           else { x += push * m; rot += 3 / (dist + 1); }
         }
