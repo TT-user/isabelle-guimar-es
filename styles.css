@@ -310,7 +310,7 @@ section { padding: 96px 0; }
 
 @keyframes marquee-scroll {
   from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  to { transform: translateX(calc(-1 * var(--marquee-distance, 50%))); }
 }
 
 /* ===== Treatments fan carousel ===== */

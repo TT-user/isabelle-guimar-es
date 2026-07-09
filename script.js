@@ -2,6 +2,22 @@
 if (window.lucide) lucide.createIcons();
 window.addEventListener('load', () => { if (window.lucide) lucide.createIcons(); });
 
+// Marquee: measure the exact pixel width of one set so the loop point
+// (translateX distance) is pixel-perfect — avoids the sub-pixel rounding
+// that a plain -50% can hit at certain zoom levels / display scaling,
+// which showed up as a visible hitch right at the seam of the loop.
+const marqueeTrack = document.querySelector('.marquee-track');
+if (marqueeTrack) {
+  const setMarqueeDistance = () => {
+    const half = marqueeTrack.scrollWidth / 2;
+    marqueeTrack.style.setProperty('--marquee-distance', `${half}px`);
+  };
+  setMarqueeDistance();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(setMarqueeDistance);
+  window.addEventListener('load', setMarqueeDistance);
+  window.addEventListener('resize', setMarqueeDistance);
+}
+
 // Reveal on scroll
 const revealEls = document.querySelectorAll('.reveal');
 const revealObserver = new IntersectionObserver((entries) => {
