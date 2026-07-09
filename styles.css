@@ -263,6 +263,13 @@ section { padding: 96px 0; }
 .social-proof-card i, .social-proof-card svg { width: 14px; height: 14px; color: var(--gold); vertical-align: middle; }
 .social-proof-card small { font-weight: 400; color: var(--ink-soft); }
 
+.social-proof-card .verified-badge {
+  width: 15px;
+  height: 15px;
+  color: #3897F0;
+  vertical-align: -2px;
+}
+
 @media (max-width: 860px) {
   .hero-inner { grid-template-columns: 1fr; padding-bottom: 48px; position: relative; }
 
