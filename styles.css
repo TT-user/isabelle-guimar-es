@@ -236,15 +236,28 @@ section { padding: 96px 0; }
   left: -24px;
   background: var(--white);
   border-radius: 999px;
-  padding: 12px 22px;
+  padding: 8px 22px 8px 8px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   box-shadow: 0 12px 30px rgba(43, 36, 23, .15);
   font-size: .85rem;
   font-weight: 600;
   color: var(--ink);
   text-decoration: none;
+  transition: transform .2s ease;
+}
+
+.social-proof-card:hover { transform: scale(1.03); }
+
+.social-proof-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: top;
+  flex-shrink: 0;
+  border: 2px solid var(--gold-pale);
 }
 
 .social-proof-card i, .social-proof-card svg { width: 14px; height: 14px; color: var(--gold); vertical-align: middle; }
