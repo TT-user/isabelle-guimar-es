@@ -307,18 +307,13 @@ section { padding: 96px 0; }
     mask-image: linear-gradient(to bottom, black 35%, transparent 85%);
   }
 
-  .hero-text { position: relative; z-index: 1; padding-top: 68px; }
+  .hero-text { position: relative; z-index: 1; padding-top: 24px; }
 
-  .social-proof-card {
-    top: 0;
-    left: 0;
-    bottom: auto;
-    pointer-events: auto;
-  }
+  .social-proof-card { display: none; }
 }
 
 @media (max-width: 600px) {
-  .hero { padding-top: 24px; }
+  .hero { padding-top: 12px; }
   .hero-inner { gap: 24px; }
 }
 
