@@ -11,6 +11,13 @@ if (marqueeTrack) {
   const setMarqueeDistance = () => {
     const half = marqueeTrack.scrollWidth / 2;
     marqueeTrack.style.setProperty('--marquee-distance', `${half}px`);
+    // Restart the animation from frame zero whenever the distance changes —
+    // changing the custom property mid-cycle keeps the same elapsed-time
+    // fraction but retargets the endpoint, which snaps the track sideways.
+    // Reapplying the animation avoids that jump so the scroll never stalls.
+    marqueeTrack.style.animation = 'none';
+    void marqueeTrack.offsetWidth;
+    marqueeTrack.style.animation = '';
   };
   setMarqueeDistance();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(setMarqueeDistance);
