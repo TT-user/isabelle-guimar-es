@@ -313,28 +313,76 @@ section { padding: 96px 0; }
   to { transform: translateX(-50%); }
 }
 
-/* ===== Treatments ===== */
-.treat-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+/* ===== Treatments carousel ===== */
+.treat-carousel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
+.treat-track {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 16px 40px 32px;
+}
+
+.treat-track::-webkit-scrollbar { display: none; }
+
 .treat-card {
+  flex: 0 0 auto;
+  width: min(300px, 74vw);
+  scroll-snap-align: center;
   background: var(--white);
   border-radius: var(--radius-md);
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(43, 36, 23, .08);
+  box-shadow: 0 14px 30px rgba(43, 36, 23, .16);
+  transition: transform .3s ease, box-shadow .3s ease;
 }
 
-.treat-img { aspect-ratio: 4/3; overflow: hidden; }
+.treat-card + .treat-card { margin-left: -64px; }
+
+.treat-card:hover,
+.treat-card:focus-within {
+  transform: translateY(-10px);
+  z-index: 5;
+  box-shadow: 0 22px 40px rgba(43, 36, 23, .22);
+}
+
+.treat-img { aspect-ratio: 4/3; overflow: hidden; pointer-events: none; }
 .treat-img img { width: 100%; height: 100%; object-fit: cover; }
 
 .treat-body { padding: 24px; }
-.treat-body p { color: var(--ink-soft); margin-bottom: 16px; }
+.treat-body p { color: var(--ink-soft); margin: 0; }
 
-@media (max-width: 900px) { .treat-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 600px) { .treat-grid { grid-template-columns: 1fr; } }
+.carousel-nav {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: var(--gold-dark);
+  color: var(--white);
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(115, 95, 11, .3);
+  transition: transform .2s ease, filter .2s ease;
+}
+
+.carousel-nav:hover { transform: scale(1.06); filter: brightness(1.15); }
+.carousel-nav i, .carousel-nav svg { width: 20px; height: 20px; }
+
+@media (max-width: 640px) {
+  .carousel-nav { display: none; }
+  .treat-track { padding: 12px 24px 32px; }
+  .treat-card + .treat-card { margin-left: -40px; }
+}
 
 /* ===== How it works ===== */
 .how-cards {

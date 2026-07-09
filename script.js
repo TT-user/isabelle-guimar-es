@@ -34,6 +34,24 @@ document.querySelectorAll('.faq-item').forEach((item) => {
   });
 });
 
+// Treatments carousel (overlapping cards, one row)
+const treatTrack = document.querySelector('.treat-track');
+if (treatTrack) {
+  const prevBtn = document.querySelector('.carousel-prev');
+  const nextBtn = document.querySelector('.carousel-next');
+  const firstCard = treatTrack.querySelector('.treat-card');
+
+  const scrollByCard = (dir) => {
+    if (!firstCard) return;
+    const cardWidth = firstCard.getBoundingClientRect().width;
+    const overlap = window.innerWidth <= 640 ? 40 : 64;
+    treatTrack.scrollBy({ left: dir * (cardWidth - overlap), behavior: 'smooth' });
+  };
+
+  if (prevBtn) prevBtn.addEventListener('click', () => scrollByCard(-1));
+  if (nextBtn) nextBtn.addEventListener('click', () => scrollByCard(1));
+}
+
 // Active nav link based on visible section
 const navLinks = document.querySelectorAll('.main-nav a');
 const sections = document.querySelectorAll('main section[id]');
