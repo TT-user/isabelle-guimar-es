@@ -34,23 +34,117 @@ document.querySelectorAll('.faq-item').forEach((item) => {
   });
 });
 
-// Treatments carousel (overlapping cards, one row)
-const treatTrack = document.querySelector('.treat-track');
-if (treatTrack) {
-  const prevBtn = document.querySelector('.carousel-prev');
-  const nextBtn = document.querySelector('.carousel-next');
-  const firstCard = treatTrack.querySelector('.treat-card');
+// Treatments fan carousel (cards splayed like a hand of cards, GSAP-powered)
+(function () {
+  const wrap = document.querySelector('.fan-wrap');
+  const layout = document.querySelector('.fan-layout');
+  if (!layout) return;
 
-  const scrollByCard = (dir) => {
-    if (!firstCard) return;
-    const cardWidth = firstCard.getBoundingClientRect().width;
-    const overlap = window.innerWidth <= 640 ? 40 : 64;
-    treatTrack.scrollBy({ left: dir * (cardWidth - overlap), behavior: 'smooth' });
-  };
+  const cards = Array.from(layout.querySelectorAll('.fan-card'));
+  if (!cards.length) return;
 
-  if (prevBtn) prevBtn.addEventListener('click', () => scrollByCard(-1));
-  if (nextBtn) nextBtn.addEventListener('click', () => scrollByCard(1));
-}
+  function getResponsiveMultiplier(width) {
+    if (width < 480) return 0.34;
+    if (width < 640) return 0.44;
+    if (width < 768) return 0.58;
+    if (width < 1024) return 0.8;
+    return 1.0;
+  }
+
+  // Distributes cards evenly around the center slot (fan math ported from
+  // the reference card-fan-carousel component, simplified for a fixed,
+  // non-paginated set of cards).
+  function getSlotConfig(total, slot) {
+    const center = (total - 1) / 2;
+    const distance = center > 0 ? (slot - center) / center : 0;
+    const absDistance = Math.abs(distance);
+    return {
+      rot: distance * 21,
+      scale: 1 - 0.2244 * absDistance * absDistance,
+      x: distance * 30,
+      y: absDistance * absDistance * 7.3,
+      zIndex: 10 - Math.round(absDistance * 4),
+    };
+  }
+
+  let active = null;
+
+  function applyLayout(hovered, animate) {
+    const total = cards.length;
+    const m = getResponsiveMultiplier(window.innerWidth);
+
+    cards.forEach((card, i) => {
+      const base = getSlotConfig(total, i);
+      let x = base.x * m;
+      let y = base.y * m;
+      let rot = base.rot;
+      let scale = base.scale;
+      let delay = 0;
+
+      if (hovered !== null) {
+        const dist = Math.abs(i - hovered);
+        delay = dist * 0.02;
+        if (i === hovered) {
+          y -= 1.6;
+          scale *= 1.08;
+        } else {
+          const push = 4.5 * (1 + 0.2 * Math.max(0, 3 - dist));
+          if (i < hovered) { x -= push * m; rot -= 3 / (dist + 1); }
+          else { x += push * m; rot += 3 / (dist + 1); }
+        }
+      }
+
+      const target = {
+        x: `${x}rem`, y: `${y}rem`, rotation: rot, scale, opacity: 1,
+        zIndex: hovered === i ? 20 : base.zIndex,
+      };
+
+      if (animate) {
+        gsap.to(card, { ...target, duration: 0.5, delay, ease: 'elastic.out(1,.75)', overwrite: 'auto' });
+      } else {
+        gsap.set(card, target);
+      }
+    });
+  }
+
+  function playEntrance() {
+    const total = cards.length;
+    const m = getResponsiveMultiplier(window.innerWidth);
+
+    cards.forEach((card, i) => {
+      const base = getSlotConfig(total, i);
+      gsap.set(card, { x: 0, y: '8rem', rotation: 0, scale: 0.6, opacity: 0 });
+      gsap.to(card, {
+        x: `${base.x * m}rem`, y: `${base.y * m}rem`, rotation: base.rot, scale: base.scale,
+        opacity: 1, zIndex: base.zIndex, duration: 1, ease: 'elastic.out(1.05,.78)', delay: 0.15 + i * 0.06,
+      });
+    });
+  }
+
+  function boot() {
+    if (!window.gsap) { setTimeout(boot, 50); return; }
+
+    applyLayout(null, false); // resting fan position, visible immediately
+
+    cards.forEach((card, i) => {
+      card.addEventListener('mouseenter', () => { active = i; applyLayout(i, true); });
+    });
+    layout.addEventListener('mouseleave', () => { active = null; applyLayout(null, true); });
+    window.addEventListener('resize', () => applyLayout(active, false));
+
+    const entranceObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          playEntrance();
+          entranceObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    entranceObserver.observe(wrap || layout);
+  }
+
+  boot();
+})();
 
 // Active nav link based on visible section
 const navLinks = document.querySelectorAll('.main-nav a');
